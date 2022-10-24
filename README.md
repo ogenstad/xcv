@@ -8,14 +8,20 @@
 
  ```bash
  cat fullchain.pem | xcv
- ```
 
- ```bash
  cat server.crt | xcv
  ```
+
+ Alternatively it's possible to run `xcv` without piping in any input and instead pasting the
+ certificate info and type Ctrl+d.
 
 ### Missing info
 
 Currently the tool only gives the most basic information about the certificates and additional
 extensions will be added as needed.
 
+### Try it out
+
+```bash
+go install github.com/ogenstad/xcv@latest
+```
