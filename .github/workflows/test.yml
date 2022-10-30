@@ -1,0 +1,19 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  lint:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+     - name: Get go.mod details
+       uses: Eun/go-mod-details@v1.0.6
+       id: go-mod-details
+     - name: Install Go
+       uses: actions/setup-go@v3
+       with:
+         go-version: ${{ steps.go-mod-details.outputs.go_version }}
+     - name: lint
+       uses: golangci/golangci-lint-action@v3.3.0
+       with:
+         version: latest
