@@ -61,6 +61,25 @@ func formatTitle(crt Certificate) string {
 		doc.WriteString("\n")
 	}
 
+	if len(crt.cert.CRLDistributionPoints) > 0 {
+		content := []string{"CRL Distribution Points:"}
+
+		for i := range crt.cert.CRLDistributionPoints {
+			content = append(content, fmt.Sprintf("%s %s", stl.divider(), crt.cert.CRLDistributionPoints[i]))
+		}
+
+		cdp := lipgloss.JoinHorizontal(lipgloss.Top,
+			stl.list().Width(stl.width()-2).Render(
+				lipgloss.JoinVertical(lipgloss.Left,
+					content...,
+				),
+			),
+		)
+
+		doc.WriteString(lipgloss.JoinHorizontal(lipgloss.Top, cdp))
+		doc.WriteString("\n")
+	}
+
 	return doc.String()
 }
 

@@ -86,13 +86,11 @@ func (c *Certificate) processExtensions() error {
 	for _, extension := range c.cert.Extensions {
 		objectIdentifier := extension.Id.String()
 		switch objectIdentifier {
-		case "2.5.29.14":
+		case "2.5.29.14", "2.5.29.15", "2.5.29.19", "2.5.29.31", "2.5.29.35":
 			// Subject Key Identifier (SKI) is ignored, handled elsewhere
-		case "2.5.29.15":
 			// Key Usage is ignored, handled elsewhere
-		case "2.5.29.19":
-			// Basic constraints is ignored, handled elwewhere
-		case "2.5.29.35":
+			// Basic constraints is ignored, handled elsewhere
+			// CRL Distribution Points (CDP) are ignored, handled elsewhere
 			// Authority Key Identifier (AKI) is ignored, handled elsewhere
 		case "2.5.29.37":
 			usages, foundUnsupported, err := parseExtendedKeyUsage(cryptobyte.String(extension.Value))
