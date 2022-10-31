@@ -99,22 +99,28 @@ func formatContent(crt Certificate) string {
 		for _, usage := range crt.KeyUsage {
 			leftColumn = append(leftColumn, stl.listChecked(usage))
 		}
-	}
 
-	leftColumn = append(leftColumn, "\n")
+		leftColumn = append(leftColumn, "\n")
+	}
 
 	if len(crt.ExtendedKeyUsage) > 0 {
 		leftColumn = append(leftColumn, stl.listHeader("Extended Key Usage"))
 		for _, eku := range crt.ExtendedKeyUsage {
 			leftColumn = append(leftColumn, stl.listChecked(eku.Name))
 		}
+
+		leftColumn = append(leftColumn, "\n")
 	}
+
+	leftColumn = append(leftColumn, formatSan(crt)...)
 
 	if len(crt.UnsupportedExtensions) > 0 {
 		leftColumn = append(leftColumn, stl.listHeader("Unsupported Extensions"))
 		for _, extension := range crt.UnsupportedExtensions {
 			leftColumn = append(leftColumn, stl.listEntry(extension))
 		}
+
+		leftColumn = append(leftColumn, "\n")
 	}
 
 	lists := lipgloss.JoinHorizontal(lipgloss.Top,
@@ -158,4 +164,21 @@ func formatFooter(c Certificate) string {
 	}
 
 	return doc.String()
+}
+
+func formatSan(c Certificate) []string {
+	lines := []string{}
+	stl := Style{}
+	san := c.San()
+
+	if len(san) > 0 {
+		lines = append(lines, stl.listHeader("Subject Alternate Names"))
+		for i := range san {
+			lines = append(lines, stl.listChecked(san[i]))
+		}
+
+		lines = append(lines, "\n")
+	}
+
+	return lines
 }

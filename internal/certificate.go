@@ -86,12 +86,14 @@ func (c *Certificate) processExtensions() error {
 	for _, extension := range c.cert.Extensions {
 		objectIdentifier := extension.Id.String()
 		switch objectIdentifier {
-		case "2.5.29.14", "2.5.29.15", "2.5.29.19", "2.5.29.31", "2.5.29.35":
-			// Subject Key Identifier (SKI) is ignored, handled elsewhere
-			// Key Usage is ignored, handled elsewhere
-			// Basic constraints is ignored, handled elsewhere
-			// CRL Distribution Points (CDP) are ignored, handled elsewhere
-			// Authority Key Identifier (AKI) is ignored, handled elsewhere
+		case "2.5.29.14", "2.5.29.15", "2.5.29.17", "2.5.29.19", "2.5.29.31", "2.5.29.35":
+			// All these OIDs are ignored as then are handled elsewhere:
+			// Subject Key Identifier (SKI)
+			// Key Usage
+			// Subject Alternate Names
+			// Basic constraints
+			// CRL Distribution Points (CDP)
+			// Authority Key Identifier (AKI)
 		case "2.5.29.37":
 			usages, foundUnsupported, err := parseExtendedKeyUsage(cryptobyte.String(extension.Value))
 			if err != nil {
@@ -110,6 +112,28 @@ func (c *Certificate) processExtensions() error {
 	}
 
 	return nil
+}
+
+func (c *Certificate) San() []string {
+	names := []string{}
+
+	for i := range c.cert.DNSNames {
+		names = append(names, c.cert.DNSNames[i])
+	}
+
+	for i := range c.cert.EmailAddresses {
+		names = append(names, c.cert.EmailAddresses[i])
+	}
+
+	for i := range c.cert.IPAddresses {
+		names = append(names, c.cert.IPAddresses[i].String())
+	}
+
+	for i := range c.cert.URIs {
+		names = append(names, c.cert.URIs[i].String())
+	}
+
+	return names
 }
 
 func New(crt *x509.Certificate) (Certificate, error) {
