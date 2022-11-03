@@ -13,7 +13,7 @@
  ```
 
  Alternatively it's possible to run `xcv` without piping in any input and instead pasting the
- certificate info and type Ctrl+d.
+ certificate info and type Ctrl+d (or Ctrl+z on Windows).
 
 ### Missing info
 
@@ -21,6 +21,8 @@ Currently the tool only gives the most basic information about the certificates 
 extensions will be added as needed.
 
 ### Try it out
+
+Grab the latest release from https://github.com/ogenstad/xcv/releases or install directly from Go:
 
 ```bash
 go install github.com/ogenstad/xcv@latest
