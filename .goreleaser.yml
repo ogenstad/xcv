@@ -1,0 +1,39 @@
+---
+project_name: xcv
+builds:
+  - env:
+      - "CGO_ENABLED=0"
+    goos:
+      - "darwin"
+      - "linux"
+      - "windows"
+    goarch:
+      - "arm"
+      - "arm64"
+      - "amd64"
+    ldflags:
+      - -s -w -X "github.com/ogenstad/xcv/internal.Version=v{{.Version}}"
+    ignore:
+      - goos: windows
+        goarch: arm64
+archives:
+  - name_template: "{{ .ProjectName }}-v{{.Version}}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    replacements:
+      darwin: "mac"
+      linux: "linux"
+      windows: "windows"
+      386: "386"
+      amd64: "amd64"
+    format_overrides:
+      - goos: "windows"
+        format: "zip"
+    files:
+      - none*
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  skip: true
+release:
+  disable: true
